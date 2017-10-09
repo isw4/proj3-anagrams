@@ -26,7 +26,9 @@ app.secret_key = CONFIG.SECRET_KEY  # Should allow using session variables
 # or else read it from the file on each request/responce cycle,
 # neither of which would be suitable for responding keystroke by keystroke.
 
-WORDS = Vocab(CONFIG.vocab)
+#TO FIX: modify the config input
+#WORDS = Vocab(CONFIG.VOCAB)
+WORDS = Vocab(['chaeyoung', 'dahyun', 'nayeon', 'jihyo', 'mina', 'sana', 'tzuyu', 'momo', 'jungyeon'])
 
 ###
 # Pages
@@ -85,19 +87,23 @@ def check():
     app.logger.debug("Entering check")
 
     # The data we need, from form and from cookie
-    text = request.form["attempt"]
+    text = flask.request.form["attempt"]
+    app.logger.debug("Attempt is:" + text)
     jumble = flask.session["jumble"]
     matches = flask.session.get("matches", [])  # Default to empty list
 
     # Is it good?
     in_jumble = LetterBag(jumble).contains(text)
+    app.logger.debug("Word is found in jumble is: " + str(in_jumble))
     matched = WORDS.has(text)
+    app.logger.debug("Word is matched is: " + str(matched))
 
     # Respond appropriately
     if matched and in_jumble and not (text in matches):
         # Cool, they found a new word
         matches.append(text)
         flask.session["matches"] = matches
+        print("matches updated")
     elif text in matches:
         flask.flash("You already found {}".format(text))
     elif not matched:
@@ -109,11 +115,11 @@ def check():
         app.logger.debug("This case shouldn't happen!")
         assert False  # Raises AssertionError
 
-        # Choose page:  Solved enough, or keep going?
-        if len(matches) >= flask.session["target_count"]:
-            return flask.redirect(url_for("success"))
-        else:
-            return flask.redirect(url_for("keep_going"))
+    # Choose page:  Solved enough, or keep going?
+    if len(matches) >= flask.session["target_count"]:
+        return flask.redirect(flask.url_for("success"))
+    else:
+        return flask.redirect(flask.url_for("keep_going"))
 
 ###############
 # AJAX request handlers
