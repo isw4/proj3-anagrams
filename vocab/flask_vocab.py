@@ -27,8 +27,8 @@ app.secret_key = CONFIG.SECRET_KEY  # Should allow using session variables
 # neither of which would be suitable for responding keystroke by keystroke.
 
 #TO FIX: modify the config input
-#WORDS = Vocab(CONFIG.VOCAB)
-WORDS = Vocab(['chaeyoung', 'dahyun', 'nayeon', 'jihyo', 'mina', 'sana', 'tzuyu', 'momo', 'jungyeon'])
+WORDS = Vocab(CONFIG.VOCAB)
+#WORDS = Vocab(['chaeyoung', 'dahyun', 'nayeon', 'jihyo', 'mina', 'sana', 'tzuyu', 'momo', 'jungyeon'])
 
 ###
 # Pages
