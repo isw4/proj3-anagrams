@@ -39,7 +39,7 @@ $("#attempt").keyup(function(event){
       $("#message").text("You already found " + txt);
     }
     else if (status === "invalid") {
-      $("#message").text("Nothing can be made from " + txt);
+      $("#message").text(txt + " can't be made from the letters in the jumble");
     }
 
     //if successful, redirects to success page

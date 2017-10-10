@@ -102,8 +102,6 @@ def check():
         return flask.jsonify(result={ "status": "old match" })
     elif not in_jumble:
         return flask.jsonify(result={ "status": "invalid" })
-    elif not matched:
-        return flask.jsonify(result={ "status": "no match yet"})
     
     else:
         app.logger.debug("This case shouldn't happen!")
