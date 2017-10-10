@@ -15,6 +15,9 @@ def same(s, t):
     """
     return sorted(s) == sorted(t)
 
+def test_jumbled_empty():
+	assert same( jumbled([], 0), "")
+
 def test_jumbled_single():
     assert same( jumbled(["abbcd"], 1), "abbcd" )
 
