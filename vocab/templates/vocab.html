@@ -84,32 +84,24 @@
     <label for="attempt">Word:</label>
     <input id="attempt" name="attempt" type="text" width="15"
       autocomplete="off"  autofocus />
-    <input type="submit" name="try" />
   </form>
 </div></div>
 
 <br />
 
-{% if session.matches|length is not equalto 0  %}
-<h2>You found </h2>
-<p id="results">
-  {% for match in session.matches %}
-  {{ match }} 
-  {% endfor %}
-</p>
-{% endif %}
+<!-- The div that prints the words that have already been found -->
+<div id="results">
+  <h2></h2>
+</div>
 
+<!-- The div that displays all the flash messages. Handled by the -->
+<!-- JS in the ajaxgame.js instead of through flask.flash -->
+<div>
+  <p id="message"></p>
+</div>
 
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    <!-- Mismatch, already found, etc. "flashed" from Python -->
-    {% for message in messages %}
-      <p class="message">{{ message }}</p>
-    {% endfor %}
-  {% endif %}
-{% endwith %}
+<!-- The script that handles all the AJAX calls in the game -->
+<script type="text/javascript" src="static/ajaxgame.js"></script>
 
-
-
- </div> <!-- container -->
+</div> <!-- container -->
 </body> </html>
