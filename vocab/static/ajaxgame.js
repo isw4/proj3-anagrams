@@ -51,11 +51,12 @@ $("#attempt").keyup(function(event){
       //no matches found, no invalid chars yet
     }
 
-    //update vocab words display
-    var vocab_is_valid = data.result.vocabisvalid;
-    for (var i = 0; i < vocab_is_valid.length; i++) {
-      if (!vocab_is_valid) $(".vocab").eq(i).addClass("invalid");
-      else                 $(".vocab").eq(i).removeClass("invalid");
+    //update vocab words display to show words that can be made from the letters in the input field,
+    //if there is something in the input field
+    var word_is_valid = data.result.wordisvalid;
+    for (var i = 0; i < word_is_valid.length; i++) {
+      if (word_is_valid[i] && txt.length > 0) $(".word").eq(i).addClass("text-success");
+      else                                    $(".word").eq(i).removeClass("text-success");
     }
     
   }, "json");
