@@ -81,33 +81,40 @@ def check():
     jumble = flask.session["jumble"]
     matches = flask.session["matches"]
 
-    # Is it good?
+    # Is the attempted word good?
     in_jumble = LetterBag(jumble).contains(text)
     matched = WORDS.has(text)
+
+    # Which of the list of vocab are ruled out? Add boolean list to rslt to be returned
+    vocab_is_valid = []
+    for vocab in flask.g.vocab:
+        vocab_is_valid.append(LetterBag(vocab).contains(text))
+        print(vocab + " is valid: :" + LetterBag(vocab).contains(text))
+    rslt = { "vocabisvalid": vocab_is_valid }
 
     # Respond appropriately
     if matched and in_jumble and not (text in matches):
         # Cool, they found a new word
-        matches.append(text)
-        flask.session['matches'] = matches
+        flask.session['matches'] = matches.append(text)
 
-        # Choose page:  Solved enough, or keep going?
         if len(matches) >= flask.session["target_count"]:
-            rslt = { "status": "success", "redirect": flask.url_for("success")}
-            return flask.jsonify(result=rslt)
+            # Solved: indicate to client to redirect. Unable to redirect from server
+            # when using ajax. See: https://stackoverflow.com/questions/25561668/force-redirect-page-on-ajax-call
+            rslt.update({ "status": "success", "redirect": flask.url_for("success")})
         else:
-            return flask.jsonify(result={ "status": "new match" })
+            # Match found but all matches found
+            rslt.update({ "status": "new match" })
     
     elif text in matches:
-        return flask.jsonify(result={ "status": "old match" })
+        rslt.update({ "status": "old match" })
     elif not in_jumble:
-        return flask.jsonify(result={ "status": "invalid" })
+        rslt.update({ "status": "invalid" })
     
     else:
-        app.logger.debug("This case shouldn't happen!")
-        assert False  # Raises AssertionError
+        # No match found but letters still in jumble
+        pass
 
-    return flask.jsonify(result={})
+    return flask.jsonify(result=rslt)
 
 
 ###############

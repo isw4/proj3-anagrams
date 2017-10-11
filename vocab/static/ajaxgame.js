@@ -25,10 +25,16 @@ $("#attempt").keyup(function(event){
 
   //AJAX post request
   $.post("/_check", { text: txt }, function(data) {
-    status = data.result.status;
+    var status = data.result.status;
     
+    //if successful, redirects to success page. When using ajax have to handle redirects from 
+    //client side. See: https://stackoverflow.com/questions/25561668/force-redirect-page-on-ajax-call
+    if (status === "success") {
+      return window.location = data.result.redirect;
+    }
+
     //matched a new word, adding it to results display
-    if (status === "new match") {
+    else if (status === "new match") {
       $("#results h2").text("You found:");
       $("#results *:last").after($("<p></p>").text(txt));
     }
@@ -41,12 +47,16 @@ $("#attempt").keyup(function(event){
     else if (status === "invalid") {
       $("#message").text(txt + " can't be made from the letters in the jumble");
     }
-
-    //if successful, redirects to success page
-    else if (status === "success") {
-      return window.location = data.result.redirect;
+    else{
+      //no matches found, no invalid chars yet
     }
 
-    return false;
+    //update vocab words display
+    var vocab_is_valid = data.result.vocabisvalid;
+    for (var i = 0; i < vocab_is_valid.length; i++) {
+      if (!vocab_is_valid) $(".vocab").eq(i).addClass("invalid");
+      else                 $(".vocab").eq(i).removeClass("invalid");
+    }
+    
   }, "json");
 })
