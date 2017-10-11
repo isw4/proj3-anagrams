@@ -42,7 +42,6 @@ def index():
     """The main page of the application"""
     #global flask.g.vocab
     flask.g.vocab = WORDS.as_list()
-    print(flask.g.vocab[0])
     flask.session["target_count"] = min(
         len(flask.g.vocab), CONFIG.SUCCESS_AT_COUNT)
     flask.session["jumble"] = jumbled(
@@ -83,9 +82,7 @@ def check():
     text = flask.request.form['text']
     jumble = flask.session["jumble"]
     matches = flask.session["matches"]
-    print("matches I got from the client is:")
-    print(matches)
-    
+
     # Is the attempted word good?
     in_jumble = LetterBag(jumble).contains(text)
     matched = WORDS.has(text)
@@ -94,7 +91,6 @@ def check():
     word_is_valid = []
     for word in WORDS.as_list():
         word_is_valid.append(LetterBag(word).contains(text))
-        print(word + " is valid: :" + str(LetterBag(word).contains(text)))
     rslt = { "wordisvalid": word_is_valid }
 
     # Respond appropriately
@@ -102,8 +98,6 @@ def check():
         # Cool, they found a new word
         matches.append(text)
         flask.session["matches"] = matches
-        print("matches I'm sending to the client is:")
-        print(flask.session["matches"])
         assert flask.session["matches"] != None
 
         if len(matches) >= flask.session["target_count"]:
