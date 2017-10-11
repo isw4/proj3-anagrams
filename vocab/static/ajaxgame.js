@@ -51,8 +51,8 @@ $("#attempt").keyup(function(event){
       //no matches found, no invalid chars yet
     }
 
-    //update vocab words display to show words that can be made from the letters in the input field,
-    //if there is something in the input field
+    //update vocab words display to highlight words that can be made from the letters in the input field,
+    //if there is something in the input field. Uses bootstrap class and bolds the font-weight in addition
     var word_is_valid = data.result.wordisvalid;
     for (var i = 0; i < word_is_valid.length; i++) {
       if (word_is_valid[i] && txt.length > 0) $(".word").eq(i).addClass("text-success");
